@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:staff_information/features/login/presentation/blocs/login_bloc.dart';
 import 'package:staff_information/features/login/presentation/pages/login_page.dart';
+import 'package:staff_information/features/staff/detail/presentation/pages/detail_staff_page.dart';
 import 'package:staff_information/injection_container.dart';
 import 'injection_container.dart' as di;
 
@@ -32,7 +33,7 @@ class App extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const LoginScreen(),
+        home: const DetailStaffPage(),
       ),
     );
   }
