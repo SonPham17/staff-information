@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:staff_information/features/login/presentation/pages/login_page.dart';
 import 'injection_container.dart' as di;
 
 Future<void> main() async {
@@ -22,7 +23,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Scaffold(),
+      home: const LoginScreen(),
     );
   }
 }
