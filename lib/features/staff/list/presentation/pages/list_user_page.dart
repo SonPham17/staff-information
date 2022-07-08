@@ -1,96 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:staff_information/core/themes/common_style.dart';
-import 'package:staff_information/features/login/presentation/blocs/login_bloc.dart';
-import 'package:staff_information/features/login/presentation/blocs/login_event.dart';
 import 'package:staff_information/features/login/presentation/blocs/login_state.dart';
-import 'package:staff_information/features/login/presentation/widgets/login_button.dart';
-import 'package:staff_information/features/login/presentation/widgets/login_textfield.dart';
+import 'package:staff_information/features/staff/detail/presentation/pages/detail_staff_page.dart';
+import 'package:staff_information/features/staff/list/domain/entities/list_user_entity.dart';
+import 'package:staff_information/features/staff/list/presentation/blocs/list_user_bloc.dart';
+import 'package:staff_information/features/staff/list/presentation/blocs/list_user_event.dart';
+import 'package:staff_information/features/staff/list/presentation/blocs/list_user_state.dart';
+import 'package:staff_information/features/staff/list/presentation/widgets/item_list_user.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class ListUserScreen extends StatefulWidget {
+  const ListUserScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ListUserScreen> createState() => _ListUserScrennState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final _userController = TextEditingController();
-  final _passwordController = TextEditingController();
+class _ListUserScrennState extends State<ListUserScreen> {
+  
+  List<UserEntity> _userList = [];
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    _userController.dispose();
-    _passwordController.dispose();
-    super.dispose();
+  void initState() {
+    // TODO: implement initState
+    BlocProvider.of<UserBloc>(context).add(GetListUserEvent());
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-   return  BlocConsumer<LoginBloc, LoginState>(
+    return  BlocConsumer<UserBloc, UserState>(
       builder: (context, state) => _buildUI(context),
       listener: (context , state) {
-        if(state is LoginLoading) {
-          _onLoading(true);
-        } else if( state is LoginSuccess) {
-          _onLoading(false);
+        if(state is UserLoading) {
+        } else if( state is GetUserSuccess) {
+          _userList = state.listUser;
         } else if (state is LoginError) {
-          _onLoading(false);
         }
       },
     );
+    
   }
-
+  
   _buildUI(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.symmetric(
-            horizontal: MediaQuery.of(context).size.width * 0.3),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextFieldCommon(
-              hint: "Input user name",
-              controller: _userController,
-              prefixIcon: const Icon(Icons.person, color: Colors.grey),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: TextFieldCommon(
-                  hint: "Input password",
-                  controller: _passwordController,
-                  prefixIcon: const Icon(Icons.key),
-                  obscureText: true),
-            ),
-            LoginButton(
-                textStyle: CommonStyle.size14w400(context),
-                text: "Login",
-                fillColor: CommonStyle.greenColor,
-                func: () {
-                  context.read<LoginBloc>().add(LoginPressEvent(
-                      _userController.text, _passwordController.text));
-                })
-          ],
-        ),
-      ),
+      body: _userList.length > 0 ? ListView.builder(
+        itemCount: _userList.length,
+        itemBuilder: (context, i) {
+          return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) =>  DetailStaffPage(userEntity: _userList[i],)),
+                );
+              },
+              child: ItemListUser(userEntity: _userList[i],));
+        },
+      ) : const Center(child: CircularProgressIndicator(),)
     );
   }
-  void _onLoading(bool isloading) {
-    isloading == true ?  showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          child:  Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              CircularProgressIndicator(),
-               Text("Loading"),
-            ],
-          ),
-        );
-      },
-    ) : null;
-  }
+
 }
+

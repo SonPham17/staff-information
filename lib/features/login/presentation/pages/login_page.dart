@@ -6,6 +6,7 @@ import 'package:staff_information/features/login/presentation/blocs/login_event.
 import 'package:staff_information/features/login/presentation/blocs/login_state.dart';
 import 'package:staff_information/features/login/presentation/widgets/login_button.dart';
 import 'package:staff_information/features/login/presentation/widgets/login_textfield.dart';
+import 'package:staff_information/features/staff/list/presentation/pages/list_user_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -35,6 +36,10 @@ class _LoginScreenState extends State<LoginScreen> {
           _onLoading(true);
         } else if( state is LoginSuccess) {
           _onLoading(false);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ListUserScreen()),
+          );
         } else if (state is LoginError) {
           _onLoading(false);
         }

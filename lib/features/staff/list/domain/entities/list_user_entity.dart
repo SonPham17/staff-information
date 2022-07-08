@@ -2,9 +2,9 @@ class UserEntity {
   String? manv;
   String? userLogin;
   String? email;
-  int? phoneNumber;
+  String? phoneNumber;
   String? birthday;
-  String? sex;
+  int? sex;
   String? address;
   String? cmnd;
   String? noicap;
